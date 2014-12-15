@@ -3,7 +3,7 @@
 //  ComboBox
 //
 //  Created by Vikas Jalan on 12/13/12.
-//  Copyright 2013 http://www.vikasjalan.com All rights reserved.
+//  Copyright 2012 http://www.vikasjalan.com All rights reserved.
 //  Conacts on jalanvikas@gmail.com or contact@vikasjalan.com
 //
 //  Get the latest version from here:
