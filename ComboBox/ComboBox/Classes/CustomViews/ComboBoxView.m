@@ -6,6 +6,9 @@
 //  Copyright 2013 http://www.vikasjalan.com All rights reserved.
 //  Conacts on jalanvikas@gmail.com or contact@vikasjalan.com
 //
+//  Get the latest version from here:
+//  https://github.com/jalanvikas/ComboBox
+//
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are
 //  met:
