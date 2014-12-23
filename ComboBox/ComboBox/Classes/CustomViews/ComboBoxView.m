@@ -40,6 +40,8 @@
 
 #define COMBO_BOX_TABLE_HOLDER_VIEW_TAG 5001
 
+#define DEFAULT_COMBO_STRING @"Select"
+
 const CGFloat kComboBoxTableHeight = 200;
 
 @interface ComboBoxView() <UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate>
@@ -52,6 +54,9 @@ const CGFloat kComboBoxTableHeight = 200;
 @property (nonatomic, assign) CGRect holderViewFrame;
 @property (nonatomic, assign) CGFloat maxViewHeight;
 @property (nonatomic, assign) NSInteger selectedComboBoxItemIndex;
+
+@property (nonatomic, assign) BOOL shouldShowFirstItemByDefault;
+@property (nonatomic, strong) NSString *defaultTitle;
 
 @property (nonatomic, strong) NSArray *comboBoxItems;
 
@@ -124,6 +129,8 @@ const CGFloat kComboBoxTableHeight = 200;
         [self addSubview:self.comboBoxTableView];
     }
     
+    self.shouldShowFirstItemByDefault = YES;
+    self.defaultTitle = DEFAULT_COMBO_STRING;
     self.selectedComboBoxItemIndex = -1;
     self.maxViewHeight = kComboBoxTableHeight;
     self.holderViewFrame = self.holderView.frame;
@@ -132,15 +139,29 @@ const CGFloat kComboBoxTableHeight = 200;
     self.comboBoxTableView.backgroundColor = [UIColor clearColor];
     self.comboBoxTableView.layer.cornerRadius = 5.0;
     
-    self.clipsToBounds = NO;
+    self.clipsToBounds = YES;
     self.backgroundColor = [UIColor clearColor];
 }
 
 - (void)updateComboBoxForSelectedComboBoxItemIndex
 {
-    if (-1 != self.selectedComboBoxItemIndex)
+    if (self.shouldShowFirstItemByDefault)
     {
-        [self setTitle:[self.comboBoxItems objectAtIndex:self.selectedComboBoxItemIndex]];
+        if (-1 != self.selectedComboBoxItemIndex)
+        {
+            [self setTitle:[self.comboBoxItems objectAtIndex:self.selectedComboBoxItemIndex]];
+        }
+    }
+    else
+    {
+        if (-1 != self.selectedComboBoxItemIndex)
+        {
+            [self setTitle:[self.comboBoxItems objectAtIndex:self.selectedComboBoxItemIndex]];
+        }
+        else
+        {
+            [self setTitle:self.defaultTitle];
+        }
     }
 }
 
@@ -160,7 +181,6 @@ const CGFloat kComboBoxTableHeight = 200;
     viewFrame.size.height = ((0 < comboBoxTableHeight)?comboBoxTableHeight:self.holderViewFrame.size.height);
     if (comboBoxTableHeight > 0)
     {
-        [self setFrame:viewFrame];
         [self.holderView setFrame:self.holderViewFrame];
         [self.comboBoxTableView setFrame:CGRectMake(self.comboBoxTableView.frame.origin.x, self.comboBoxTableView.frame.origin.y, self.comboBoxTableView.frame.size.width, 0.0)];
         
@@ -170,6 +190,7 @@ const CGFloat kComboBoxTableHeight = 200;
         if (nil != keyWindow)
         {
             CGRect frm = [self.holderView convertRect:self.holderView.frame toView:keyWindow];
+            frm.origin.y += self.holderView.bounds.size.height + 2;
             
             UIView *comboBoxTableHolderView = [[UIView alloc] initWithFrame:keyWindow.bounds];
             [comboBoxTableHolderView setTag:COMBO_BOX_TABLE_HOLDER_VIEW_TAG];
@@ -186,7 +207,7 @@ const CGFloat kComboBoxTableHeight = 200;
             
             if ((comboBoxTableFrame.origin.y + comboBoxTableFrame.size.height) > keyWindow.bounds.size.height)
             {
-                comboBoxTableFrame.origin.y = (frm.origin.y - comboBoxTableFrame.size.height + frm.size.height);
+                comboBoxTableFrame.origin.y = (frm.origin.y - comboBoxTableFrame.size.height - frm.size.height - 4);
             }
         }
         
@@ -212,8 +233,6 @@ const CGFloat kComboBoxTableHeight = 200;
                          [self.comboBoxTableView setFrame:comboBoxTableFrame];
                      }completion:^(BOOL finished){
                          [self.comboBoxTableView setHidden:((0 < comboBoxTableHeight)?NO:YES)];
-                         [self.expandCollapseButtonTitle setHidden:((0 < comboBoxTableHeight)?YES:NO)];
-                         [self setFrame:viewFrame];
                          [self.holderView setFrame:self.holderViewFrame];
                          if ([self.comboBoxTableView isHidden])
                          {
@@ -242,10 +261,19 @@ const CGFloat kComboBoxTableHeight = 200;
     [self.expandCollapseButtonTitle setFont:font];
 }
 
+- (void)setPromptMessage:(NSString *)message
+{
+    if ((nil != message) && (0 < [message length]))
+    {
+        self.shouldShowFirstItemByDefault = NO;
+        self.defaultTitle = message;
+    }
+}
+
 - (void)updateWithAvailableComboBoxItems:(NSArray *)comboItems
 {
     self.comboBoxItems = comboItems;
-    if (-1 == self.selectedComboBoxItemIndex)
+    if (self.shouldShowFirstItemByDefault && (-1 == self.selectedComboBoxItemIndex))
     {
         if (0 < [self.comboBoxItems count])
         {
@@ -262,9 +290,16 @@ const CGFloat kComboBoxTableHeight = 200;
     {
         self.selectedComboBoxItemIndex = selectedIndex;
     }
-    else if (0 < [self.comboBoxItems count])
+    else if (self.shouldShowFirstItemByDefault)
     {
-        self.selectedComboBoxItemIndex = 0;
+        if (0 < [self.comboBoxItems count])
+        {
+            self.selectedComboBoxItemIndex = 0;
+        }
+        else
+        {
+            self.selectedComboBoxItemIndex = -1;
+        }
     }
     else
     {
@@ -294,19 +329,44 @@ const CGFloat kComboBoxTableHeight = 200;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self setTitle:[self.comboBoxItems objectAtIndex:indexPath.row]];
+    NSString *cellTitle = @"";
+    if (self.shouldShowFirstItemByDefault)
+    {
+        cellTitle = [self.comboBoxItems objectAtIndex:indexPath.row];
+    }
+    else
+    {
+        if (0 == indexPath.row)
+        {
+            cellTitle = self.defaultTitle;
+        }
+        else
+        {
+            cellTitle = [self.comboBoxItems objectAtIndex:(indexPath.row - 1)];
+        }
+    }
+    [self setTitle:cellTitle];
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
     [self expandCollapseButtonClicked:nil];
     
     if ([self.delegate respondsToSelector:@selector(selectedItemAtIndex:fromComboBoxView:)])
-        [self.delegate selectedItemAtIndex:indexPath.row fromComboBoxView:self];
+    {
+        if (self.shouldShowFirstItemByDefault)
+        {
+            [self.delegate selectedItemAtIndex:indexPath.row fromComboBoxView:self];
+        }
+        else
+        {
+            [self.delegate selectedItemAtIndex:(indexPath.row - 1) fromComboBoxView:self];
+        }
+    }
 }
 
 #pragma mark - UITableViewDataSource Methods
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.comboBoxItems count];
+    return ((self.shouldShowFirstItemByDefault)?[self.comboBoxItems count]:([self.comboBoxItems count] + 1));
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -320,8 +380,25 @@ const CGFloat kComboBoxTableHeight = 200;
         [[cell textLabel] setFont:[self.expandCollapseButtonTitle font]];
     }
     
-    NSString *cellTitle = [self.comboBoxItems objectAtIndex:indexPath.row];
-    [cell setAccessoryType:(([[self.expandCollapseButtonTitle text] isEqualToString:cellTitle])?UITableViewCellAccessoryCheckmark:UITableViewCellAccessoryNone)];
+    NSString *cellTitle = @"";
+    if (self.shouldShowFirstItemByDefault)
+    {
+        cellTitle = [self.comboBoxItems objectAtIndex:indexPath.row];
+        [cell setAccessoryType:(([[self.expandCollapseButtonTitle text] isEqualToString:cellTitle])?UITableViewCellAccessoryCheckmark:UITableViewCellAccessoryNone)];
+    }
+    else
+    {
+        if (0 == indexPath.row)
+        {
+            cellTitle = self.defaultTitle;
+        }
+        else
+        {
+            cellTitle = [self.comboBoxItems objectAtIndex:(indexPath.row - 1)];
+            [cell setAccessoryType:(([[self.expandCollapseButtonTitle text] isEqualToString:cellTitle])?UITableViewCellAccessoryCheckmark:UITableViewCellAccessoryNone)];
+        }
+    }
+    
     [[cell textLabel] setText:cellTitle];
     return cell;
 }

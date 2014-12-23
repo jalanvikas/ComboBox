@@ -61,6 +61,8 @@
 
 - (void)setTitleFont:(UIFont *)font;
 
+- (void)setPromptMessage:(NSString *)message;
+
 /*
     This method is used to set the items which combo box can show.
  
