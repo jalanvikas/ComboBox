@@ -75,6 +75,8 @@
 */
 - (void)updateWithSelectedIndex:(NSInteger)selectedIndex;
 
+- (void)updateForViewFrameChanged;
+
 - (void)collapseComboBoxView;
 
 - (void)setMaxComboBoxHeight:(CGFloat)maxHeight;

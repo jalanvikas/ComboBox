@@ -309,6 +309,32 @@ const CGFloat kComboBoxTableHeight = 200;
     [self updateComboBoxForSelectedComboBoxItemIndex];
 }
 
+- (void)updateForViewFrameChanged
+{
+    self.holderViewFrame = self.bounds;
+    
+    if (nil != self.holderView)
+    {
+        self.holderView.frame = self.bounds;
+    }
+    
+    if (nil != self.expandCollapseButton)
+    {
+        [self.expandCollapseButton setFrame:self.holderView.bounds];
+    }
+    
+    if (nil != self.expandCollapseButtonTitle)
+    {
+        self.expandCollapseButtonTitle.frame = CGRectMake(15.0, 0.0, (self.holderView.bounds.size.width - 15.0), self.holderView.bounds.size.height);
+    }
+    
+    if (nil == self.comboBoxTableView)
+    {
+        self.comboBoxTableView.frame = CGRectMake(0.0, 0.0, self.bounds.size.width, self.comboBoxTableView.frame.size.height);
+    }
+    self.holderViewFrame = self.holderView.frame;
+}
+
 - (void)collapseComboBoxView
 {
     if (![self.comboBoxTableView isHidden])
