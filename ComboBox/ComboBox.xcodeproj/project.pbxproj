@@ -14,6 +14,7 @@
 		F5FAB0FA1A3B77BB008510B6 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = F5FAB0F81A3B77BB008510B6 /* LaunchScreen.xib */; };
 		F5FAB0FD1A3B77CE008510B6 /* MainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F5FAB0FB1A3B77CE008510B6 /* MainViewController.xib */; };
 		F5FAB1001A3B7846008510B6 /* ComboBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FAB0FF1A3B7846008510B6 /* ComboBoxView.m */; };
+		F5FDA3621A4D4BCE009DC9A8 /* comboDropIndicator.png in Resources */ = {isa = PBXBuildFile; fileRef = F5FDA3611A4D4BCE009DC9A8 /* comboDropIndicator.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		F5FAB0FC1A3B77CE008510B6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainViewController.xib; sourceTree = "<group>"; };
 		F5FAB0FE1A3B7846008510B6 /* ComboBoxView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComboBoxView.h; sourceTree = "<group>"; };
 		F5FAB0FF1A3B7846008510B6 /* ComboBoxView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComboBoxView.m; sourceTree = "<group>"; };
+		F5FDA3611A4D4BCE009DC9A8 /* comboDropIndicator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = comboDropIndicator.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,6 +138,7 @@
 		F5FAB0F31A3B7698008510B6 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				F5FDA3611A4D4BCE009DC9A8 /* comboDropIndicator.png */,
 				F5FAB0F41A3B7698008510B6 /* Images.xcassets */,
 			);
 			path = Images;
@@ -210,6 +213,7 @@
 				F5FAB0FA1A3B77BB008510B6 /* LaunchScreen.xib in Resources */,
 				F5FAB0FD1A3B77CE008510B6 /* MainViewController.xib in Resources */,
 				F5FAB0F61A3B7698008510B6 /* Images.xcassets in Resources */,
+				F5FDA3621A4D4BCE009DC9A8 /* comboDropIndicator.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

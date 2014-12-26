@@ -63,6 +63,10 @@
 
 - (void)setPromptMessage:(NSString *)message;
 
+- (void)setShouldShowDropIndicator:(BOOL)showDropIndicator;     // Default Visible.
+
+- (void)setDropIndicatorImage:(UIImage *)dropIndicatorImage;
+
 /*
     This method is used to set the items which combo box can show.
  

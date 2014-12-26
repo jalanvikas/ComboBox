@@ -39,6 +39,9 @@
 #import "ComboBoxView.h"
 
 #define COMBO_BOX_TABLE_HOLDER_VIEW_TAG 5001
+#define DROP_INDICATOR_MIN_WIDTH 40
+#define DROP_INDICATOR_AVERAGE_WIDTH 15
+#define COMBO_TITLE_X_OFFSET 15.0
 
 #define DEFAULT_COMBO_STRING @"Select"
 
@@ -50,6 +53,7 @@ const CGFloat kComboBoxTableHeight = 200;
 @property (nonatomic, strong) UILabel *expandCollapseButtonTitle;
 @property (nonatomic, strong) UIView *holderView;
 @property (nonatomic, strong) UITableView *comboBoxTableView;
+@property (nonatomic, strong) UIButton *dropIndicatorButton;
 
 @property (nonatomic, assign) CGRect holderViewFrame;
 @property (nonatomic, assign) CGFloat maxViewHeight;
@@ -114,11 +118,24 @@ const CGFloat kComboBoxTableHeight = 200;
         [self.expandCollapseButton addTarget:self action:@selector(expandCollapseButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     }
     
+    float dropIndicatorImageWidth = MIN(DROP_INDICATOR_MIN_WIDTH, ((self.holderView.bounds.size.width * DROP_INDICATOR_AVERAGE_WIDTH) * 0.01));
     if (nil == self.expandCollapseButtonTitle)
     {
-        self.expandCollapseButtonTitle = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 0.0, (self.holderView.bounds.size.width - 15.0), self.holderView.bounds.size.height)];
+        self.expandCollapseButtonTitle = [[UILabel alloc] initWithFrame:CGRectMake(COMBO_TITLE_X_OFFSET, 0.0, (self.holderView.bounds.size.width - dropIndicatorImageWidth - COMBO_TITLE_X_OFFSET), self.holderView.bounds.size.height)];
         self.expandCollapseButtonTitle.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         [self.holderView addSubview:self.expandCollapseButtonTitle];
+    }
+    
+    if (nil == self.dropIndicatorButton)
+    {
+        self.dropIndicatorButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [self.dropIndicatorButton setUserInteractionEnabled:NO];
+        [self.dropIndicatorButton setEnabled:NO];
+        [self.dropIndicatorButton setContentMode:UIViewContentModeScaleAspectFit];
+        [self.dropIndicatorButton setFrame:CGRectMake((self.holderView.bounds.size.width - dropIndicatorImageWidth), 0.0, dropIndicatorImageWidth, self.holderView.bounds.size.height)];
+        [self.dropIndicatorButton setBackgroundColor:[UIColor clearColor]];
+        [self.dropIndicatorButton setImage:[UIImage imageNamed:@"comboDropIndicator.png"] forState:UIControlStateNormal];
+        [self.holderView addSubview:self.dropIndicatorButton];
     }
     
     if (nil == self.comboBoxTableView)
@@ -270,6 +287,16 @@ const CGFloat kComboBoxTableHeight = 200;
     }
 }
 
+- (void)setShouldShowDropIndicator:(BOOL)showDropIndicator
+{
+    [self.dropIndicatorButton setHidden:!showDropIndicator];
+}
+
+- (void)setDropIndicatorImage:(UIImage *)dropIndicatorImage
+{
+    [self.dropIndicatorButton setImage:dropIndicatorImage forState:UIControlStateNormal];
+}
+
 - (void)updateWithAvailableComboBoxItems:(NSArray *)comboItems
 {
     self.comboBoxItems = comboItems;
@@ -282,6 +309,8 @@ const CGFloat kComboBoxTableHeight = 200;
     }
     
     [self updateComboBoxForSelectedComboBoxItemIndex];
+    
+    [self.dropIndicatorButton setEnabled:((0 < [self.comboBoxItems count])?YES:NO)];
 }
 
 - (void)updateWithSelectedIndex:(NSInteger)selectedIndex
@@ -323,9 +352,15 @@ const CGFloat kComboBoxTableHeight = 200;
         [self.expandCollapseButton setFrame:self.holderView.bounds];
     }
     
+    float dropIndicatorImageWidth = MIN(DROP_INDICATOR_MIN_WIDTH, ((self.holderView.bounds.size.width * DROP_INDICATOR_AVERAGE_WIDTH) * 0.01));
     if (nil != self.expandCollapseButtonTitle)
     {
-        self.expandCollapseButtonTitle.frame = CGRectMake(15.0, 0.0, (self.holderView.bounds.size.width - 15.0), self.holderView.bounds.size.height);
+        self.expandCollapseButtonTitle.frame = CGRectMake(COMBO_TITLE_X_OFFSET, 0.0, (self.holderView.bounds.size.width - dropIndicatorImageWidth - COMBO_TITLE_X_OFFSET), self.holderView.bounds.size.height);
+    }
+    
+    if (nil != self.dropIndicatorButton)
+    {
+        self.dropIndicatorButton.frame = CGRectMake((self.holderView.bounds.size.width - dropIndicatorImageWidth), 0.0, dropIndicatorImageWidth, self.holderView.bounds.size.height);
     }
     
     if (nil == self.comboBoxTableView)
