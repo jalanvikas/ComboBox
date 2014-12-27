@@ -59,6 +59,7 @@ const CGFloat kComboBoxTableHeight = 200;
 @property (nonatomic, assign) CGFloat maxViewHeight;
 @property (nonatomic, assign) NSInteger selectedComboBoxItemIndex;
 
+@property (nonatomic, assign) BOOL shouldShowDropIndicatorImage;
 @property (nonatomic, assign) BOOL shouldShowFirstItemByDefault;
 @property (nonatomic, strong) NSString *defaultTitle;
 
@@ -100,6 +101,12 @@ const CGFloat kComboBoxTableHeight = 200;
 
 - (void)setupComboBoxView
 {
+    self.shouldShowFirstItemByDefault = YES;
+    self.shouldShowDropIndicatorImage = YES;
+    self.defaultTitle = DEFAULT_COMBO_STRING;
+    self.selectedComboBoxItemIndex = -1;
+    self.maxViewHeight = kComboBoxTableHeight;
+    
     if (nil == self.holderView)
     {
         self.holderView = [[UIView alloc] initWithFrame:self.bounds];
@@ -118,7 +125,7 @@ const CGFloat kComboBoxTableHeight = 200;
         [self.expandCollapseButton addTarget:self action:@selector(expandCollapseButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     }
     
-    float dropIndicatorImageWidth = MIN(DROP_INDICATOR_MIN_WIDTH, ((self.holderView.bounds.size.width * DROP_INDICATOR_AVERAGE_WIDTH) * 0.01));
+    float dropIndicatorImageWidth = MIN(((self.shouldShowDropIndicatorImage)?DROP_INDICATOR_MIN_WIDTH:0.0), ((self.holderView.bounds.size.width * DROP_INDICATOR_AVERAGE_WIDTH) * 0.01));
     if (nil == self.expandCollapseButtonTitle)
     {
         self.expandCollapseButtonTitle = [[UILabel alloc] initWithFrame:CGRectMake(COMBO_TITLE_X_OFFSET, 0.0, (self.holderView.bounds.size.width - dropIndicatorImageWidth - COMBO_TITLE_X_OFFSET), self.holderView.bounds.size.height)];
@@ -146,10 +153,6 @@ const CGFloat kComboBoxTableHeight = 200;
         [self addSubview:self.comboBoxTableView];
     }
     
-    self.shouldShowFirstItemByDefault = YES;
-    self.defaultTitle = DEFAULT_COMBO_STRING;
-    self.selectedComboBoxItemIndex = -1;
-    self.maxViewHeight = kComboBoxTableHeight;
     self.holderViewFrame = self.holderView.frame;
     
     [self.comboBoxTableView setHidden:YES];
@@ -289,6 +292,8 @@ const CGFloat kComboBoxTableHeight = 200;
 
 - (void)setShouldShowDropIndicator:(BOOL)showDropIndicator
 {
+    self.shouldShowDropIndicatorImage = showDropIndicator;
+    [self updateForViewFrameChanged];
     [self.dropIndicatorButton setHidden:!showDropIndicator];
 }
 
@@ -352,7 +357,7 @@ const CGFloat kComboBoxTableHeight = 200;
         [self.expandCollapseButton setFrame:self.holderView.bounds];
     }
     
-    float dropIndicatorImageWidth = MIN(DROP_INDICATOR_MIN_WIDTH, ((self.holderView.bounds.size.width * DROP_INDICATOR_AVERAGE_WIDTH) * 0.01));
+    float dropIndicatorImageWidth = MIN(((self.shouldShowDropIndicatorImage)?DROP_INDICATOR_MIN_WIDTH:0.0), ((self.holderView.bounds.size.width * DROP_INDICATOR_AVERAGE_WIDTH) * 0.01));
     if (nil != self.expandCollapseButtonTitle)
     {
         self.expandCollapseButtonTitle.frame = CGRectMake(COMBO_TITLE_X_OFFSET, 0.0, (self.holderView.bounds.size.width - dropIndicatorImageWidth - COMBO_TITLE_X_OFFSET), self.holderView.bounds.size.height);
