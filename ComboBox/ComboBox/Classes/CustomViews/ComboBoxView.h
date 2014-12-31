@@ -57,6 +57,10 @@
 
 #pragma mark - Custom Methods
 
+- (void)setShouldShowComboBoxBorder:(BOOL)showComboBoxBorder;     // Default Visible.
+
+- (void)setComboBoxBorderColor:(UIColor *)color;
+
 - (void)setTitleColor:(UIColor *)color;
 
 - (void)setTitleFont:(UIFont *)font;

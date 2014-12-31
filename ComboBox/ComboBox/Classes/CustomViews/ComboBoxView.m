@@ -61,6 +61,7 @@ const CGFloat kComboBoxTableHeight = 200;
 
 @property (nonatomic, assign) BOOL shouldShowDropIndicatorImage;
 @property (nonatomic, assign) BOOL shouldShowFirstItemByDefault;
+@property (nonatomic, assign) BOOL showComboBoxBorder;
 @property (nonatomic, strong) NSString *defaultTitle;
 
 @property (nonatomic, strong) NSArray *comboBoxItems;
@@ -103,6 +104,7 @@ const CGFloat kComboBoxTableHeight = 200;
 {
     self.shouldShowFirstItemByDefault = YES;
     self.shouldShowDropIndicatorImage = YES;
+    self.showComboBoxBorder = YES;
     self.defaultTitle = DEFAULT_COMBO_STRING;
     self.selectedComboBoxItemIndex = -1;
     self.maxViewHeight = kComboBoxTableHeight;
@@ -151,6 +153,7 @@ const CGFloat kComboBoxTableHeight = 200;
         [self.comboBoxTableView setDelegate:self];
         [self.comboBoxTableView setDataSource:self];
         [self addSubview:self.comboBoxTableView];
+        self.comboBoxTableView.layer.borderColor = [UIColor lightGrayColor].CGColor;
     }
     
     self.holderViewFrame = self.holderView.frame;
@@ -201,6 +204,7 @@ const CGFloat kComboBoxTableHeight = 200;
     viewFrame.size.height = ((0 < comboBoxTableHeight)?comboBoxTableHeight:self.holderViewFrame.size.height);
     if (comboBoxTableHeight > 0)
     {
+        self.comboBoxTableView.layer.borderWidth = ((self.showComboBoxBorder)?1.0f:0.0f);
         [self.holderView setFrame:self.holderViewFrame];
         [self.comboBoxTableView setFrame:CGRectMake(self.comboBoxTableView.frame.origin.x, self.comboBoxTableView.frame.origin.y, self.comboBoxTableView.frame.size.width, 0.0)];
         
@@ -236,6 +240,8 @@ const CGFloat kComboBoxTableHeight = 200;
     }
     else
     {
+        self.comboBoxTableView.layer.borderWidth = 0.0f;
+        comboBoxTableFrame.origin = self.comboBoxTableView.frame.origin;
         [self.expandCollapseButtonTitle setHidden:NO];
         [self bringSubviewToFront:self.holderView];
         
@@ -270,6 +276,16 @@ const CGFloat kComboBoxTableHeight = 200;
 }
 
 #pragma mark - Custom Methods
+
+- (void)setShouldShowComboBoxBorder:(BOOL)showComboBoxBorder
+{
+    self.showComboBoxBorder = showComboBoxBorder;
+}
+
+- (void)setComboBoxBorderColor:(UIColor *)color
+{
+    self.comboBoxTableView.layer.borderColor = color.CGColor;
+}
 
 - (void)setTitleColor:(UIColor *)color
 {

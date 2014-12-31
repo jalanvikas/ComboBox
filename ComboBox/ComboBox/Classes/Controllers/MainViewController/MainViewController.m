@@ -68,6 +68,7 @@
     [self.comboBox1 setTitleColor:[UIColor redColor]];
     [self.comboBox1 setPromptMessage:@"Select"];
     [self.comboBox1 updateWithAvailableComboBoxItems:values];
+    [self.comboBox1 setComboBoxBorderColor:[UIColor blueColor]];
 }
 
 - (void)didReceiveMemoryWarning
