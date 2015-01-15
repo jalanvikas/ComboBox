@@ -197,7 +197,7 @@ const CGFloat kComboBoxTableHeight = 200;
 
 - (IBAction)expandCollapseButtonClicked:(id)sender
 {
-    CGFloat comboBoxTableHeight = (([self.comboBoxTableView isHidden])?(MIN(self.maxViewHeight, ([self.comboBoxItems count] * self.holderViewFrame.size.height))):0.0f);
+    CGFloat comboBoxTableHeight = (([self.comboBoxTableView isHidden])?(MIN(self.maxViewHeight, (([self.comboBoxItems count] + ((self.shouldShowFirstItemByDefault)?0:1)) * self.holderViewFrame.size.height))):0.0f);
     CGRect comboBoxTableFrame = CGRectMake(self.expandCollapseButton.frame.origin.x, 0.0, self.expandCollapseButton.frame.size.width, comboBoxTableHeight);
     
     CGRect viewFrame = self.frame;
@@ -225,6 +225,10 @@ const CGFloat kComboBoxTableHeight = 200;
             UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
             [tapGesture setDelegate:self];
             [comboBoxTableHolderView addGestureRecognizer:tapGesture];
+            
+            UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
+            [panGesture setDelegate:self];
+            [comboBoxTableHolderView addGestureRecognizer:panGesture];
             
             comboBoxTableFrame.origin = frm.origin;
             [self.comboBoxTableView setFrame:frm];
@@ -490,6 +494,14 @@ const CGFloat kComboBoxTableHeight = 200;
 - (void)handleTapGesture:(UITapGestureRecognizer *)gesture
 {
     if (UIGestureRecognizerStateEnded == gesture.state)
+    {
+        [self expandCollapseButtonClicked:nil];
+    }
+}
+
+- (void)handlePanGesture:(UIPanGestureRecognizer *)gesture
+{
+    if (UIGestureRecognizerStateBegan == gesture.state)
     {
         [self expandCollapseButtonClicked:nil];
     }
