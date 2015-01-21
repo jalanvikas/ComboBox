@@ -55,8 +55,8 @@
     NSMutableArray *values = [NSMutableArray arrayWithObjects:@"Bangalore", @"Delhi", @"Calcutta", @"Mumbai", @"Chennia", nil];
     
     [self.comboBox setTitleColor:[UIColor blackColor]];
-    [self.comboBox updateWithAvailableComboBoxItems:values];
     [self.comboBox setPromptMessage:@"Select City"];
+    [self.comboBox updateWithAvailableComboBoxItems:values];
     [self.comboBox setComboBoxBorderColor:[UIColor blackColor]];
     [self.comboBox.layer setCornerRadius:5.0];
     [self.comboBox.layer setBorderWidth:1.0];
