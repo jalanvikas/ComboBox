@@ -38,7 +38,6 @@
 
 @property (nonatomic, weak) IBOutlet ComboBoxView *comboBox;
 
-@property (nonatomic, strong) ComboBoxView *comboBox1;
 
 @end
 
@@ -53,22 +52,15 @@
 {
     [super viewWillAppear:animated];
     
-    NSMutableArray *values = [NSMutableArray arrayWithObjects:@"First object", @"Second object", @"Third object", @"Fourth object", @"Fifth object", nil];
+    NSMutableArray *values = [NSMutableArray arrayWithObjects:@"Bangalore", @"Delhi", @"Calcutta", @"Mumbai", @"Chennia", nil];
     
     [self.comboBox setTitleColor:[UIColor blackColor]];
     [self.comboBox updateWithAvailableComboBoxItems:values];
-    
-    if (nil == self.comboBox1)
-    {
-        self.comboBox1 = [[ComboBoxView alloc] initWithFrame:CGRectMake(40, 40, 180, 40)];
-        [self.comboBox1 setDelegate:self];
-        [self.view addSubview:self.comboBox1];
-    }
-    
-    [self.comboBox1 setTitleColor:[UIColor redColor]];
-    [self.comboBox1 setPromptMessage:@"Select"];
-    [self.comboBox1 updateWithAvailableComboBoxItems:values];
-    [self.comboBox1 setComboBoxBorderColor:[UIColor blueColor]];
+    [self.comboBox setPromptMessage:@"Select City"];
+    [self.comboBox setComboBoxBorderColor:[UIColor blackColor]];
+    [self.comboBox.layer setCornerRadius:5.0];
+    [self.comboBox.layer setBorderWidth:1.0];
+    [self.comboBox.layer setBorderColor:[UIColor blackColor].CGColor];
 }
 
 - (void)didReceiveMemoryWarning
