@@ -233,6 +233,17 @@ const CGFloat kComboBoxTableHeight = 200;
             comboBoxTableFrame.origin = frm.origin;
             [self.comboBoxTableView setFrame:frm];
             
+            CGFloat upperHeight = comboBoxTableFrame.origin.y;
+            CGFloat belowHeight = (keyWindow.bounds.size.height - comboBoxTableFrame.origin.y - frm.size.height);
+            
+            int noOfRows = (MAX(upperHeight, belowHeight) / frm.size.height);
+            if (noOfRows > ([self.comboBoxItems count] + ((self.shouldShowFirstItemByDefault)?0:1)))
+            {
+                noOfRows = (int)([self.comboBoxItems count] + ((self.shouldShowFirstItemByDefault)?0:1));
+            }
+            
+            comboBoxTableFrame.size.height = (noOfRows * frm.size.height);
+            
             if ((comboBoxTableFrame.origin.y + comboBoxTableFrame.size.height) > keyWindow.bounds.size.height)
             {
                 comboBoxTableFrame.origin.y = (frm.origin.y - comboBoxTableFrame.size.height - frm.size.height - 4);
